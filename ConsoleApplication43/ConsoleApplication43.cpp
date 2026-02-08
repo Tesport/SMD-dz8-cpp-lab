@@ -16,7 +16,7 @@ public:
         type = new char[1];
         type[0] = '\0';
         amount = 0;
-        std::cout << "constructor default" << this << endl;
+        std::cout << "constructor default was called by \"" << this << "\" this object" << endl;
     }
 
     Product(const char* n, int q, const char* t) {
@@ -25,7 +25,7 @@ public:
         type = new char[strlen(t) + 1];
         strcpy_s(type, strlen(t) + 1, t);
         amount = q;
-        std::cout << "constructor " << this << endl;
+        std::cout << "constructor was called by \"" << this << "\" this object" << endl;
     }
 
     Product(const Product& sample) {
@@ -36,13 +36,13 @@ public:
         strcpy_s(type, strlen(sample.type) + 1, sample.type);
 
         amount = sample.amount;
-        std::cout << "constructor copy " << this << endl;
+        std::cout << "constructor copy was called by \"" << this << "\" this object" << endl;
     }
 
     ~Product() {
         delete[] name;
         delete[] type;
-        std::cout << "destructor " << this << endl;
+        std::cout << "destructor was called by \"" << this << "\" this object" << endl;
     }
 
     void set_name(const char* n) {
@@ -79,18 +79,30 @@ public:
 };
 
 int main() {
-    Product p1("Chair", 10, "mebel");
-    Product p2 = p1;
+    Product a("Mouse", 12, "Electronics");
+    Product b("Keyboard", 7, "Electronics");
+    Product c = a;
+    Product d;
+    cout << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << endl;
+    Product* arr[4];
+    arr[0] = &a;
+    arr[1] = &b;
+    arr[2] = &c;
+    arr[3] = &d;
 
-    Product* p3 = new Product("dsdsd", 5, "ffff");
-    Product* ptr = &p1;
-    ptr->show();
+    for (int i = 0; i < 4; i++)
+        arr[i]->show();
+    cout << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << endl;
 
-    void (Product:: * funcPtr)() const;
-    funcPtr = &Product::show;
+    cout << "Ykazatel na komponenty-funcziu: \n";
+    void (Product:: * f)() const = &Product::show;
 
-    (p2.*funcPtr)();
-    (p3->*funcPtr)();
 
-    delete p3;
+    Product* p = new Product("Monitor", 4, "Electronics");
+
+    arr[1]->set_amount(20);
+    (arr[1]->*f)();
+    (p->*f)();
+    cout << "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n" << endl;
+    delete p;
 }
